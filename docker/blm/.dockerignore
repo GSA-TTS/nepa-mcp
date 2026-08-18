@@ -1,0 +1,31 @@
+# Keep the build context (repo root) minimal and ensure no secrets or local
+# state are baked into the image. The BLM ArcGIS services are public, so no
+# credentials are needed at all.
+#
+# NOTE: this .dockerignore lives in the repo root's docker/blm/ dir, but Docker
+# only reads a .dockerignore at the build-context root. build-and-push.sh copies
+# the relevant excludes; the authoritative ignore is the root .dockerignore if
+# present. Kept here for documentation and for `docker build -f` invocations
+# that honor <dockerfile>.dockerignore.
+
+# Virtual envs / caches
+.venv/
+**/.venv/
+**/__pycache__/
+*.pyc
+
+# VCS / editor
+.git/
+.gitignore
+.vscode/
+.agents/
+
+# Tests, docs, and other servers not needed for the BLM image
+tests/
+docs/
+scripts/
+
+# Local env files (never bake secrets)
+.env
+*.env
+.env.*
