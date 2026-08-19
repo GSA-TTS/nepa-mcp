@@ -41,6 +41,24 @@ GSA MCP servers (e.g. the standalone `mcp-server-fema-nfhl`).
 > Leave them as-is unless/until they are re-published under the new name; new
 > servers should use `mcp-server-nepa-<agency>`.
 
+## Catalog display-name convention
+
+Going forward, the catalog `name` (the server's display name in the gateway)
+uses the form:
+
+```
+NEPA <AGENCY>
+```
+
+e.g. `NEPA CFR`, `NEPA BLM`, `NEPA Census`. This groups the NEPA servers
+together in the gateway UI and disambiguates them from unrelated GSA servers.
+This applies to the `name:` field in the catalog entry (`<server>.yaml`) in
+`GSA-TTS/mcp-server-hub-catalog`.
+
+> **Existing exceptions:** the first entries were added before this convention
+> with plain names (`BLM`, `Census`, `CFR`). Do not apply retroactively; use
+> `NEPA <AGENCY>` for new catalog entries only.
+
 ## Per-server layout
 
 ```
