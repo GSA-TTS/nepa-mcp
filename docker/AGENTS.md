@@ -36,10 +36,9 @@ e.g. `mcp-server-nepa-blm`, `mcp-server-nepa-census`, `mcp-server-nepa-fema-nfhl
 The `nepa-` prefix scopes them to this fork and disambiguates from unrelated
 GSA MCP servers (e.g. the standalone `mcp-server-fema-nfhl`).
 
-> **Existing exceptions:** the first two images were published before this
-> convention as `mcp-server-blm` and `mcp-server-census` (no `nepa-` prefix).
-> Leave them as-is unless/until they are re-published under the new name; new
-> servers should use `mcp-server-nepa-<agency>`.
+This convention applies to **all** servers. The first images (BLM, Census) were
+originally published without the prefix (`mcp-server-blm`, `mcp-server-census`)
+but have since been renamed to `mcp-server-nepa-blm` and `mcp-server-nepa-census`.
 
 ## Catalog display-name convention
 
@@ -53,11 +52,9 @@ NEPA <AGENCY>
 e.g. `NEPA CFR`, `NEPA BLM`, `NEPA Census`. This groups the NEPA servers
 together in the gateway UI and disambiguates them from unrelated GSA servers.
 This applies to the `name:` field in the catalog entry (`<server>.yaml`) in
-`GSA-TTS/mcp-server-hub-catalog`.
-
-> **Existing exceptions:** the first entries were added before this convention
-> with plain names (`BLM`, `Census`, `CFR`). Do not apply retroactively; use
-> `NEPA <AGENCY>` for new catalog entries only.
+`GSA-TTS/mcp-server-hub-catalog`. It applies to **all** servers — the early
+BLM/Census/CFR entries have been renamed to `NEPA BLM`, `NEPA Census`, and
+`NEPA CFR` to match.
 
 ## Per-server layout
 

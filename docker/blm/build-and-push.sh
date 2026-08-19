@@ -31,7 +31,8 @@ REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 cd "$REPO_ROOT"
 
 REGISTRY="ghcr.io"
-IMAGE="${REGISTRY}/gsa-tts/mcp-server-blm"
+# NEPA server image naming convention: mcp-server-nepa-<agency> (see docker/AGENTS.md).
+IMAGE="${REGISTRY}/gsa-tts/mcp-server-nepa-blm"
 DOCKERFILE="docker/blm/Dockerfile"
 
 # Version tag. Independent of the monorepo package version so BLM image releases
@@ -56,7 +57,7 @@ if [[ "$PUSH" == "1" ]]; then
   echo ""
   echo "NOTE: On first push, set the GHCR package visibility to PUBLIC so the"
   echo "Obot docker runtime backend (which has no image-pull auth) can pull it:"
-  echo "  GitHub -> Org packages -> mcp-server-blm -> Package settings"
+  echo "  GitHub -> Org packages -> mcp-server-nepa-blm -> Package settings"
   echo "  -> Change visibility -> Public"
   echo ""
   echo "Verify the published architecture is amd64:"

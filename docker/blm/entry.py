@@ -43,7 +43,7 @@ def build_app():
 
     @mcp.custom_route("/health", methods=["GET"])
     async def health_check(request: Request) -> JSONResponse:
-        return JSONResponse({"status": "healthy", "service": f"mcp-server-{SERVER_NAME}"})
+        return JSONResponse({"status": "healthy", "service": f"mcp-server-nepa-{SERVER_NAME}"})
 
     return mcp
 
