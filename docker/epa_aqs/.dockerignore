@@ -1,0 +1,30 @@
+# Keep the build context (repo root) minimal and ensure no secrets or local
+# state are baked into the image. The per-user EPA_AQS_EMAIL and EPA_AQS_API_KEY
+# are injected at runtime by the gateway, never copied into the image.
+#
+# NOTE: this .dockerignore lives in the repo root's docker/epa_aqs/ dir, but
+# Docker only reads a .dockerignore at the build-context root. Kept here for
+# documentation and for `docker build -f` invocations that honor
+# <dockerfile>.dockerignore.
+
+# Virtual envs / caches
+.venv/
+**/.venv/
+**/__pycache__/
+*.pyc
+
+# VCS / editor
+.git/
+.gitignore
+.vscode/
+.agents/
+
+# Tests, docs, and other servers not needed for the EPA AQS image
+tests/
+docs/
+scripts/
+
+# Local env files (never bake secrets)
+.env
+*.env
+.env.*
