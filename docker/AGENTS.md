@@ -24,6 +24,23 @@ To keep merges clean, **never edit `<server>/server.py`, the root
 lives here under `docker/`. The HTTP shim imports the *unmodified* upstream
 server module and swaps only the transport.
 
+## Image naming convention
+
+Going forward, images for these NEPA-related servers use the naming convention:
+
+```
+ghcr.io/gsa-tts/mcp-server-nepa-<agency>
+```
+
+e.g. `mcp-server-nepa-blm`, `mcp-server-nepa-census`, `mcp-server-nepa-fema-nfhl`.
+The `nepa-` prefix scopes them to this fork and disambiguates from unrelated
+GSA MCP servers (e.g. the standalone `mcp-server-fema-nfhl`).
+
+> **Existing exceptions:** the first two images were published before this
+> convention as `mcp-server-blm` and `mcp-server-census` (no `nepa-` prefix).
+> Leave them as-is unless/until they are re-published under the new name; new
+> servers should use `mcp-server-nepa-<agency>`.
+
 ## Per-server layout
 
 ```
@@ -31,7 +48,7 @@ docker/<server>/
 ├── entry.py           # HTTP shim: import upstream server, add /health, run http transport
 ├── Dockerfile         # build recipe (context = repo root)
 ├── .dockerignore      # trim build context
-└── build-and-push.sh  # build + push ghcr.io/gsa-tts/mcp-server-<server>
+└── build-and-push.sh  # build + push ghcr.io/gsa-tts/mcp-server-nepa-<agency>
 ```
 
 ## How the pieces fit
@@ -69,8 +86,8 @@ docker/<server>/
    - `entry.py`: set `SERVER_NAME = "<server>"`.
    - `Dockerfile`: copy `<server>/requirements.txt` and the `<server>` dir;
      adjust the extra shared deps only if that server needs more.
-   - `build-and-push.sh`: set `IMAGE=ghcr.io/gsa-tts/mcp-server-<server>` and
-     `DOCKERFILE=docker/<server>/Dockerfile`.
+   - `build-and-push.sh`: set `IMAGE=ghcr.io/gsa-tts/mcp-server-nepa-<agency>`
+     and `DOCKERFILE=docker/<server>/Dockerfile`.
 2. Build locally and verify (see below).
 3. Publish: `bash docker/<server>/build-and-push.sh`, then set the GHCR package
    visibility to **Public** (the gateway's Docker backend pulls without auth).
@@ -99,7 +116,7 @@ for these.
 PUSH=0 bash docker/<server>/build-and-push.sh
 
 # Run and smoke-test:
-docker run --rm -p 8080:8080 ghcr.io/gsa-tts/mcp-server-<server>:0.1.0
+docker run --rm -p 8080:8080 ghcr.io/gsa-tts/mcp-server-nepa-<agency>:0.1.0
 curl -s localhost:8080/health          # -> {"status":"healthy",...}
 ```
 
@@ -132,7 +149,7 @@ curl -s -X POST localhost:8080/mcp \
 
 ## Publish notes
 
-- Image tags: `ghcr.io/gsa-tts/mcp-server-<server>:<version>` + `:latest`.
+- Image tags: `ghcr.io/gsa-tts/mcp-server-nepa-<agency>:<version>` + `:latest`.
   Version defaults to `0.1.0`; override with `VERSION=x.y.z`.
 - First push per image: set GHCR package visibility to **Public**.
 - Confirm architecture: `docker manifest inspect <image>:<version> | grep architecture`
