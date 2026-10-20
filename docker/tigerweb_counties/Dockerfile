@@ -14,7 +14,7 @@
 # (see docker/tigerweb_counties/build-and-push.sh).
 #
 # We deliberately do NOT `pip install .` from the root pyproject.toml: its
-# hatchling `force-include` requires all 19 server directories to be present,
+# hatchling `force-include` requires all 23 server directories to be present,
 # which would mean copying the whole monorepo into every per-server image. Since
 # we don't want to edit upstream's pyproject.toml (keeps `git merge upstream`
 # clean), we instead lay out the repo packages as siblings under /app and put

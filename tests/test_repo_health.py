@@ -23,6 +23,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 SERVER_NAMES = [
     "blm",
+    "blm_mlrs",
     "census",
     "cfr",
     "efh",
@@ -35,8 +36,10 @@ SERVER_NAMES = [
     "ipac",
     "nepa_assist",
     "noaa",
+    "nrcs_soils",
     "nrhp",
     "padus",
+    "permitting_dashboard",
     "pcsrf",
     "tigerweb_counties",
     "tribal",
@@ -158,7 +161,7 @@ class TestDependencyHygiene:
     def test_area_servers_declare_geometry_deps(self):
         # The four ROI-area servers must ship pyproj + shapely in their
         # standalone requirements (equal-area clipping depends on them).
-        for name in ("efh", "esa_ranges", "noaa", "pcsrf"):
+        for name in ("efh", "esa_ranges", "noaa", "nrcs_soils", "pcsrf"):
             req = ROOT / name / "requirements.txt"
             assert req.exists(), f"{name}/requirements.txt missing"
             text = req.read_text(encoding="utf-8")

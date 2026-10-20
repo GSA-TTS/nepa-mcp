@@ -1,6 +1,6 @@
 ---
 name: nepa-screening
-description: Use NEPA-MCP for project-area environmental screening, biological and cultural resources, jurisdiction, protected lands, flood risk, air quality, and regulatory research.
+description: Use NEPA-MCP for project-area environmental screening, biological and cultural resources, jurisdiction, soils, protected lands, flood risk, air quality, and regulatory research.
 ---
 
 # NEPA Screening
@@ -23,15 +23,34 @@ Before location-scoped calls, confirm or derive latitude, longitude, and buffer 
 - Use `fema_nfhl` for flood zones, levees, water areas, and flood-risk summaries.
 - Use `epa_aqs` for air monitors, annual air-quality data, and NAAQS screening context.
 - Use `nepa_assist` for EPA NEPAssist screening categories.
+- Use `nrcs_soils` for SSURGO soil map units, drainage and hydrologic-group
+  indicators, restrictive layers, erosion factors, and farmland classifications.
+  Treat results as soil-survey screening, not geotechnical advice, wetland
+  delineation, infiltration testing, or an agency farmland determination.
 - Use `epa_acres` for identifiable EPA ACRES Brownfields property records; treat
   results as grant-reported screening data, not a complete contaminated-site
   inventory. Dense results are nearest-first and paginated; follow the returned
   `result_offset` instruction when the complete property list is needed.
 - Use `padus` for protected areas, ownership, management, and conservation status.
 - Use `blm` for BLM land use plans, wilderness areas, and national monuments.
+- Use `blm_mlrs` for BLM land-use authorization cases, locatable-mineral
+  operations, and geothermal or oil-and-gas leases. Preserve the source
+  disposition and treat mapped records as legal-description-derived screening
+  evidence, not surveyed footprints, title opinions, or proof that an
+  operation is active or authorized.
 - Use `usace` for Corps districts and wetland delineation regions.
 - Use `nrhp` for National Register of Historic Places properties.
 - Use `cfr` for current eCFR text, regulatory history, Federal Register citations, and executive orders.
+
+## Research tracked permitting projects
+
+Use `permitting_dashboard` to search dashboard-listed projects, retrieve a
+project timetable, or find upcoming, completed, and past-target milestones.
+These tools accept project/state filters rather than an ROI. Preserve separate
+project/action/milestone statuses, all source date fields, quality warnings, and
+the snapshot timestamp. Use the returned alternative date when present.
+Follow pagination with `snapshot_updated_at`; restart if the export changed.
+A completed tracked review is not proof that all permits are secured.
 
 ## Create map artifacts
 

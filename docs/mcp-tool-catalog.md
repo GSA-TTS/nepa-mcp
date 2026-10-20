@@ -1,6 +1,6 @@
 # MCP Tool Catalog
 
-NEPA MCP provides 20 independent servers with 47 tools. Use this catalog to choose the smallest set of servers needed for a workflow.
+NEPA MCP provides 23 independent servers with 56 tools. Use this catalog to choose the smallest set of servers needed for a workflow.
 
 This file is generated from the server registry and each server's live MCP `tools/list` contract. Do not edit it manually. Regenerate it with `uv run python scripts/generate_tool_catalog.py`; add `--check` to verify it without writing.
 
@@ -9,6 +9,9 @@ This file is generated from the server registry and each server's live MCP `tool
 | `blm` | `get_blm_land_use_plans_in_roi` | Identify BLM approved land use plans intersecting the ROI. |
 | `blm` | `get_blm_national_monuments_in_roi` | Identify BLM National Monuments and NCAs intersecting the ROI. |
 | `blm` | `get_blm_wilderness_areas_in_roi` | Identify BLM designated wilderness areas intersecting the ROI. |
+| `blm_mlrs` | `get_blm_mlrs_energy_leases_in_roi` | Screen BLM MLRS geothermal and oil-and-gas lease case records. |
+| `blm_mlrs` | `get_blm_mlrs_land_use_authorizations_in_roi` | Screen public BLM MLRS right-of-way, lease, permit, and easement case records. |
+| `blm_mlrs` | `get_blm_mlrs_locatable_operations_in_roi` | Screen BLM MLRS locatable-mineral plans of operations and notices. |
 | `census` | `get_acs_socioeconomic_indicators_in_roi` | Query ACS socioeconomic indicators for counties within a region of interest. |
 | `cfr` | `cfr_browse_structure` | Browse the table of contents at any level of the CFR hierarchy. |
 | `cfr` | `cfr_compare_versions` | Diff a single CFR section between two dates, paragraph by paragraph. |
@@ -41,8 +44,14 @@ This file is generated from the server registry and each server's live MCP `tool
 | `map_composer` | `list_available_layers` | List Map Composer layer IDs, source publishers, review uses, and profiles. |
 | `nepa_assist` | `analyze_nepa_assist_screening` | Analyze EPA NEPAssist environmental screening layers for a location. |
 | `noaa` | `get_noaa_critical_habitat_in_roi` | Query NOAA for West Coast Region ESA critical habitat within the ROI. |
+| `nrcs_soils` | `analyze_nrcs_ssurgo_soil_constraints` | Summarize NRCS SSURGO soil indicators relevant to early siting review. |
+| `nrcs_soils` | `get_nrcs_ssurgo_farmland_classification_in_roi` | Get exact NRCS SSURGO farmland classifications within a project-area buffer. |
+| `nrcs_soils` | `get_nrcs_ssurgo_mapunits_in_roi` | Get USDA-NRCS SSURGO soil map units intersecting a project-area buffer. |
 | `nrhp` | `get_nrhp_properties_in_roi` | Query NRHP for historic properties within the ROI for Section 106 NHPA screening. |
 | `padus` | `get_padus_protected_areas_in_roi` | Query PAD-US protected-area records within a region of interest. |
+| `permitting_dashboard` | `find_permitting_milestones` | Find upcoming, recently completed, or past-target incomplete permitting milestones. |
+| `permitting_dashboard` | `get_project_permitting_timetable` | Retrieve a project's tracked reviews, responsible agencies, milestones, and permitting dates. |
+| `permitting_dashboard` | `search_permitting_projects` | Find projects on the federal Permitting Dashboard by name, location, sector, agency, or status. |
 | `pcsrf` | `get_atlantic_salmon_efh_hapc_in_roi` | Query Atlantic salmon EFH/HAPC buffers within the ROI. |
 | `pcsrf` | `get_noaa_all_species_ranges_in_roi` | Query NOAA All_Species_Ranges records within the ROI. |
 | `pcsrf` | `get_noaa_critical_habitat_20210904_in_roi` | Query NOAA critical-habitat snapshot records within the ROI. |

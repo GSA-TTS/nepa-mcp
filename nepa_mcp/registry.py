@@ -15,6 +15,7 @@ class ServerSpec:
 
 SERVER_SPECS = (
     ServerSpec("blm", "BLM land use plans, wilderness areas, and national monuments"),
+    ServerSpec("blm_mlrs", "BLM MLRS authorizations, mineral operations, and energy leases"),
     ServerSpec("census", "Census ACS socioeconomic indicators", ("CENSUS_API_KEY",)),
     ServerSpec("cfr", "CFR, Federal Register, and executive-order lookup"),
     ServerSpec("efh", "NOAA Essential Fish Habitat and HAPC screening"),
@@ -32,8 +33,10 @@ SERVER_SPECS = (
     ServerSpec("map_composer", "Interactive environmental maps and GeoJSON exports"),
     ServerSpec("nepa_assist", "EPA NEPAssist environmental screening"),
     ServerSpec("noaa", "NOAA West Coast critical habitat"),
+    ServerSpec("nrcs_soils", "USDA-NRCS SSURGO soil and farmland screening"),
     ServerSpec("nrhp", "National Register of Historic Places properties"),
     ServerSpec("padus", "PAD-US protected areas and land management"),
+    ServerSpec("permitting_dashboard", "Federal permitting projects, review timetables, and milestones"),
     ServerSpec("pcsrf", "NOAA species, habitat, and recovery-program datasets"),
     ServerSpec("tigerweb_counties", "Census TIGERweb county intersections"),
     ServerSpec("tribal", "Census AIANNHA tribal lands"),

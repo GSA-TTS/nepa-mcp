@@ -11,6 +11,17 @@
         "PYTHONUNBUFFERED": "1"
       }
     },
+    "blm_mlrs": {
+      "type": "stdio",
+      "command": "nepa-mcp",
+      "args": [
+        "server",
+        "blm_mlrs"
+      ],
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      }
+    },
     "census": {
       "type": "stdio",
       "command": "nepa-mcp",
@@ -154,6 +165,17 @@
         "PYTHONUNBUFFERED": "1"
       }
     },
+    "nrcs_soils": {
+      "type": "stdio",
+      "command": "nepa-mcp",
+      "args": [
+        "server",
+        "nrcs_soils"
+      ],
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      }
+    },
     "nrhp": {
       "type": "stdio",
       "command": "nepa-mcp",
@@ -182,6 +204,17 @@
       "args": [
         "server",
         "pcsrf"
+      ],
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      }
+    },
+    "permitting_dashboard": {
+      "type": "stdio",
+      "command": "nepa-mcp",
+      "args": [
+        "server",
+        "permitting_dashboard"
       ],
       "env": {
         "PYTHONUNBUFFERED": "1"

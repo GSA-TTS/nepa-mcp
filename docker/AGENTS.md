@@ -8,6 +8,21 @@ servers. It lets each stdio server be hosted by the GSA Obot MCP gateway as a
 Each server gets its own `docker/<server>/` subdirectory. `blm/` is the
 reference implementation; copy it when adding a new server.
 
+## Container scope
+
+The upstream v0.1.6 package contains 23 servers. This additive layer maintains
+the 17 server images that were deployed on the AWS MCP Server Hub:
+
+`blm`, `census`, `cfr`, `efh`, `epa_acres`, `epa_aqs`, `esa_ranges`,
+`fema_nfhl`, `gbif`, `ipac`, `noaa`, `nrhp`, `padus`, `pcsrf`,
+`tigerweb_counties`, `tribal`, and `usace`.
+
+The package servers `gis`, `map_composer`, and `nepa_assist`, plus the v0.1.4-
+v0.1.6 additions `blm_mlrs`, `nrcs_soils`, and `permitting_dashboard`, are not
+part of this container deployment scope. Census and EPA AQS images remain in
+scope for source synchronization but require per-user credentials and are
+deferred from the shared cloud.gov remote-app deployment.
+
 ## Why additive (do NOT edit upstream files)
 
 This repo is a fork of `pnnl/nepa-mcp` and we want to keep pulling upstream
@@ -82,7 +97,7 @@ docker/<server>/
   out `nepa_mcp`, `nepa_mcp_common`, and the server dir as siblings under
   `/app` with `PYTHONPATH=/app`. We deliberately do **not** `pip install .`
   from the root `pyproject.toml`: its hatchling `force-include` requires *all*
-  19 server directories to be present, which would force copying the whole
+  23 server directories to be present, which would force copying the whole
   monorepo into every image. Laying out only the needed packages avoids that
   and avoids editing the upstream `pyproject.toml`.
 
