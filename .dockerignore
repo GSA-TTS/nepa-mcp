@@ -1,0 +1,44 @@
+# Docker builds use the repository root as context. Exclude credentials, local
+# state, development artifacts, and source that no maintained image copies.
+.git
+.github
+.env
+.env.*
+**/.env
+**/.env.*
+**/__pycache__
+**/*.py[cod]
+.venv
+venv
+.pytest_cache
+.ruff_cache
+.mypy_cache
+.coverage
+coverage.xml
+htmlcov
+build
+dist
+output
+tmp
+tests
+docs
+scripts
+.agents
+.claude
+.idea
+.vscode
+*.log
+*.swp
+*.nepa-mcp.bak
+credentials.env
+config.toml
+handoffs
+EIDR
+
+# Servers outside the maintained 17-image deployment scope.
+blm_mlrs
+gis
+map_composer
+nepa_assist
+nrcs_soils
+permitting_dashboard

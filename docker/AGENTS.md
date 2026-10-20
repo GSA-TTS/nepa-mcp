@@ -5,8 +5,9 @@ servers. It lets each stdio server be hosted by the GSA Obot MCP gateway as a
 `containerized` server over streamable HTTP, **without modifying any upstream
 (pnnl) code** — so `git merge upstream/main` stays conflict-free.
 
-Each server gets its own `docker/<server>/` subdirectory. `blm/` is the
-reference implementation; copy it when adding a new server.
+Each server gets an `entry.py` and a thin build wrapper under
+`docker/<server>/`. All images use `docker/Dockerfile`, `docker/constraints.txt`,
+and `docker/build-image.sh` so security and release behavior cannot drift.
 
 ## Container scope
 
@@ -76,9 +77,13 @@ BLM/Census/CFR entries have been renamed to `NEPA BLM`, `NEPA Census`, and
 ```
 docker/<server>/
 ├── entry.py           # HTTP shim: import upstream server, add /health, run http transport
-├── Dockerfile         # build recipe (context = repo root)
-├── .dockerignore      # trim build context
 └── build-and-push.sh  # build + push ghcr.io/gsa-tts/mcp-server-nepa-<agency>
+
+docker/
+├── Dockerfile              # shared hardened image recipe
+├── build-image.sh          # local-by-default build and explicit publication
+├── constraints.txt         # exact versions exported from uv.lock
+└── runtime-requirements.txt
 ```
 
 ## How the pieces fit
@@ -93,7 +98,7 @@ docker/<server>/
   Because the tools come from the upstream module, upstream tool changes flow
   through automatically after a merge — no edits to `entry.py` needed.
 
-- **`Dockerfile`** uses `python:3.12-slim` (the repo requires >=3.12) and lays
+- **`Dockerfile`** uses a digest-pinned `python:3.12-slim` base and lays
   out `nepa_mcp`, `nepa_mcp_common`, and the server dir as siblings under
   `/app` with `PYTHONPATH=/app`. We deliberately do **not** `pip install .`
   from the root `pyproject.toml`: its hatchling `force-include` requires *all*
@@ -101,10 +106,24 @@ docker/<server>/
   monorepo into every image. Laying out only the needed packages avoids that
   and avoids editing the upstream `pyproject.toml`.
 
-  Dependencies are installed from `<server>/requirements.txt` plus the shared
-  runtime deps used by `nepa_mcp` / `nepa_mcp_common` (`platformdirs`,
-  `python-dotenv`, `pyproj`). `shapely`/`pyproj` ship manylinux wheels, so no
-  system GEOS/PROJ build is required.
+  Dependencies are installed from `<server>/requirements.txt` plus shared
+  runtime requirements under exact versions exported from `uv.lock`. Regenerate
+  the constraints after an approved dependency update with:
+
+  ```sh
+  uv export --frozen --no-dev --no-emit-project --no-hashes \
+    --format requirements-txt --output-file docker/constraints.txt
+  ```
+
+- The image runs as numeric user `10001`; application files are copied with
+  matching ownership so cross-platform BuildKit permission translation cannot
+  make them unreadable. Images include OCI source/revision/version labels and
+  use an exec-form command. `PORT=8080` is only a default; a Cloud
+  Foundry-provided `PORT` passes through to `entry.py`.
+
+- The root `.dockerignore` is the effective build-context policy. It excludes
+  credentials, VCS/local state, and all six servers outside this deployment
+  scope before the context reaches Docker.
 
 - The gateway EC2 host is **x86_64**, so images MUST be built `linux/amd64`
   (buildx handles emulation from Apple Silicon). An arm64-only image makes the
@@ -112,14 +131,13 @@ docker/<server>/
 
 ## Adding a new server (checklist)
 
-1. `cp -r docker/blm docker/<server>` and update:
+1. Create `docker/<server>/entry.py` and `docker/<server>/build-and-push.sh`:
    - `entry.py`: set `SERVER_NAME = "<server>"`.
-   - `Dockerfile`: copy `<server>/requirements.txt` and the `<server>` dir;
-     adjust the extra shared deps only if that server needs more.
-   - `build-and-push.sh`: set `IMAGE=ghcr.io/gsa-tts/mcp-server-nepa-<agency>`
-     and `DOCKERFILE=docker/<server>/Dockerfile`.
+   - `build-and-push.sh`: call `docker/build-image.sh` with the server, image,
+     and shared `docker/Dockerfile`.
+   - add the server to the helper's allowlist and root `.dockerignore` scope.
 2. Build locally and verify (see below).
-3. Publish: `bash docker/<server>/build-and-push.sh`, then set the GHCR package
+3. Publish: `PUSH=1 VERSION=x.y.z bash docker/<server>/build-and-push.sh`, then set the GHCR package
    visibility to **Public** (the gateway's Docker backend pulls without auth).
 4. Add the catalog entry in `GSA-TTS/mcp-server-hub-catalog` (`<server>.yaml`,
    `docs/servers/<server>.md`, `icons/<server>.png`, README row). `repoURL`
@@ -142,11 +160,12 @@ for these.
 ## Build & verify locally
 
 ```sh
-# Local single-arch build (loads into docker, no push):
-PUSH=0 bash docker/<server>/build-and-push.sh
+# Local linux/amd64 build (the safe default; loads into Docker, never pushes):
+bash docker/<server>/build-and-push.sh
 
 # Run and smoke-test:
-docker run --rm -p 8080:8080 ghcr.io/gsa-tts/mcp-server-nepa-<agency>:0.1.0
+docker run --rm --platform linux/amd64 -e PORT=8080 -p 8080:8080 \
+  ghcr.io/gsa-tts/mcp-server-nepa-<agency>:0.1.6
 curl -s localhost:8080/health          # -> {"status":"healthy",...}
 ```
 
@@ -179,8 +198,13 @@ curl -s -X POST localhost:8080/mcp \
 
 ## Publish notes
 
-- Image tags: `ghcr.io/gsa-tts/mcp-server-nepa-<agency>:<version>` + `:latest`.
-  Version defaults to `0.1.0`; override with `VERSION=x.y.z`.
+- Image tags: `ghcr.io/gsa-tts/mcp-server-nepa-<agency>:<version>`. Version
+  defaults to `0.1.6`; override with `VERSION=x.y.z`.
+- Publishing requires `PUSH=1`. Updating the mutable `latest` tag additionally
+  requires `PUBLISH_LATEST=1`; cloud.gov configuration must use the resulting
+  immutable digest, never `latest`. Local dirty builds are labeled with
+  `gov.gsa.nepa-mcp.source-dirty=1`; publication fails unless the worktree is
+  clean so the OCI revision identifies all image inputs.
 - First push per image: set GHCR package visibility to **Public**.
 - Confirm architecture: `docker manifest inspect <image>:<version> | grep architecture`
   (must be `amd64`).

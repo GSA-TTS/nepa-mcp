@@ -1,0 +1,4 @@
+# Shared imports used by nepa_mcp, nepa_mcp_common, and the HTTP wrappers.
+platformdirs
+pyproj
+python-dotenv
