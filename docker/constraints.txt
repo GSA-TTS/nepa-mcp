@@ -214,7 +214,7 @@ secretstorage==3.5.0 ; sys_platform == 'linux'
     # via keyring
 shapely==2.1.2
     # via nepa-mcp
-soupsieve==2.9
+soupsieve==4.0
     # via beautifulsoup4
 sse-starlette==3.4.5
     # via
